@@ -1,0 +1,10 @@
+{
+    "database": {
+        "driverClass": "org.postgresql.Driver",
+        "url": "jdbc:postgresql:animeta_test",
+    },
+
+    # Make this unique, and don't share it with anybody.
+    # Used as password hash salt
+    "secretKey": "",
+}
