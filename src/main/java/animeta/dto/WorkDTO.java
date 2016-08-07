@@ -6,9 +6,7 @@ import animeta.model.Episode;
 import animeta.model.Record;
 import animeta.model.Work;
 import animeta.model.WorkMetadata;
-import animeta.util.WorkMetadatas;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WorkDTO {
@@ -17,6 +15,7 @@ public class WorkDTO {
     private int recordCount;
     private Integer rank;
     private Record record;
+    private WorkMetadata metadata;
 
     public WorkDTO(Work work) {
         this.work = work;
@@ -30,7 +29,6 @@ public class WorkDTO {
         return work.getTitle();
     }
 
-    @JsonProperty("image_url")
     public String getImageUrl() {
         return "https://animeta.net/media/" + work.getImageFilename();
     }
@@ -43,7 +41,6 @@ public class WorkDTO {
         this.episodes = episodes;
     }
 
-    @JsonProperty("record_count")
     public int getRecordCount() {
         return recordCount;
     }
@@ -69,6 +66,10 @@ public class WorkDTO {
     }
 
     public WorkMetadata getMetadata() {
-        return WorkMetadatas.extract(work);
+        return metadata;
+    }
+
+    public void setMetadata(WorkMetadata metadata) {
+        this.metadata = metadata;
     }
 }

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import animeta.model.Episode;
 import animeta.model.QRecordHistory;
+import animeta.model.TitleMapping;
 import animeta.model.Work;
 import animeta.model.WorkIndex;
 import com.google.common.collect.Lists;
@@ -22,46 +23,51 @@ public class WorkDAO extends AbstractDAO<Work> {
         this.titleMappingDAO = titleMappingDAO;
     }
 
-    public Work find(int id) {
-        return get(id);
+    public Work get(int id) {
+        return getInternal(id);
     }
 
-    public Work findByTitle(String title) {
-        return get(titleMappingDAO.find(title).getWorkId());
+    public Work getByTitle(String title) {
+        TitleMapping mapping = titleMappingDAO.get(title);
+        if (mapping == null) {
+            return null;
+        }
+        return getInternal(mapping.getWorkId());
     }
 
-    public List<Episode> findEpisodes(Work work) {
+    public List<Episode> getEpisodes(Work work) {
+        QRecordHistory recordHistory = QRecordHistory.recordHistory;
         SortedMap<Integer, Episode> episodeMap = Maps.newTreeMap();
         List<Tuple> statusesWithComment = queryFactory()
-                .select(QRecordHistory.recordHistory.status, QRecordHistory.recordHistory.status.count())
-                .from(QRecordHistory.recordHistory)
-                .where(QRecordHistory.recordHistory.workId.eq(work.getId()),
-                        QRecordHistory.recordHistory.comment.ne(""))
-                .groupBy(QRecordHistory.recordHistory.status)
+                .select(recordHistory.status, recordHistory.status.count())
+                .from(recordHistory)
+                .where(recordHistory.workId.eq(work.getId()),
+                        recordHistory.comment.ne(""))
+                .groupBy(recordHistory.status)
                 .fetch();
         for (Tuple row : statusesWithComment) {
-            Integer number = Ints.tryParse(row.get(QRecordHistory.recordHistory.status));
+            Integer number = Ints.tryParse(row.get(recordHistory.status));
             if (number == null) {
                 continue;
             }
-            episodeMap.put(number, new Episode(number, row.get(QRecordHistory.recordHistory.status.count()).intValue()));
+            episodeMap.put(number, new Episode(number, row.get(recordHistory.status.count()).intValue()));
         }
         List<Tuple> statusesWithoutComment = queryFactory()
-                .select(QRecordHistory.recordHistory.status, QRecordHistory.recordHistory.status.count())
-                .from(QRecordHistory.recordHistory)
-                .where(QRecordHistory.recordHistory.workId.eq(work.getId()),
-                        QRecordHistory.recordHistory.comment.eq(""))
-                .groupBy(QRecordHistory.recordHistory.status)
+                .select(recordHistory.status, recordHistory.status.count())
+                .from(recordHistory)
+                .where(recordHistory.workId.eq(work.getId()),
+                        recordHistory.comment.eq(""))
+                .groupBy(recordHistory.status)
                 .fetch();
         for (Tuple row : statusesWithoutComment) {
-            Integer number = Ints.tryParse(row.get(QRecordHistory.recordHistory.status));
+            Integer number = Ints.tryParse(row.get(recordHistory.status));
             if (number == null) {
                 continue;
             }
             if (episodeMap.containsKey(number)) {
                 continue;
             }
-            if (row.get(QRecordHistory.recordHistory.status.count()) <= 1) {
+            if (row.get(recordHistory.status.count()) <= 1) {
                 continue;
             }
             episodeMap.put(number, new Episode(number));
@@ -69,7 +75,7 @@ public class WorkDAO extends AbstractDAO<Work> {
         return Lists.newArrayList(episodeMap.values());
     }
 
-    public WorkIndex findIndex(Work work) {
+    public WorkIndex getIndex(Work work) {
         return currentSession().get(WorkIndex.class, work.getId());
     }
 }

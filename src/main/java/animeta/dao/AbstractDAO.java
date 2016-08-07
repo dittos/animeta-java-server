@@ -31,7 +31,7 @@ public abstract class AbstractDAO<E> {
         return new HibernateQueryFactory(currentSession());
     }
 
-    protected E get(Serializable id) {
+    protected E getInternal(Serializable id) {
         return (E) currentSession().get(entityClass, id);
     }
 }

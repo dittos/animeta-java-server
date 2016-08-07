@@ -40,7 +40,7 @@ public class AuthContextFactory implements Factory<AuthContext> {
                 if (loaded) {
                     return;
                 }
-                user = userDAO.find(Integer.valueOf(session.getUserId()));
+                user = userDAO.get(Integer.valueOf(session.getUserId()));
                 loaded = true;
             }
         };

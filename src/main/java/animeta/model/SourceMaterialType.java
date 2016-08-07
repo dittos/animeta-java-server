@@ -1,7 +1,5 @@
 package animeta.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum SourceMaterialType {
     MANGA("manga"),
     ORIGINAL("original"),
@@ -17,7 +15,6 @@ public enum SourceMaterialType {
         this.legacyName = legacyName;
     }
 
-    @JsonValue
     public String getLegacyName() {
         return legacyName;
     }

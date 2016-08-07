@@ -20,7 +20,7 @@ public class RecordHistory implements Serializable {
     private String    status;
     private Timestamp updatedAt;
     private String    comment;
-    private Short     statusType;
+    private RecordStatusType     statusType;
     private Boolean   containsSpoiler;
     private Integer   recordId;
 
@@ -45,7 +45,7 @@ public class RecordHistory implements Serializable {
         String    status,
         Timestamp updatedAt,
         String    comment,
-        Short     statusType,
+        RecordStatusType     statusType,
         Boolean   containsSpoiler,
         Integer   recordId
     ) {
@@ -116,11 +116,11 @@ public class RecordHistory implements Serializable {
     }
 
     @Column(name = "status_type", nullable = false, precision = 16)
-    public Short getStatusType() {
+    public RecordStatusType getStatusType() {
         return this.statusType;
     }
 
-    public void setStatusType(Short statusType) {
+    public void setStatusType(RecordStatusType statusType) {
         this.statusType = statusType;
     }
 

@@ -20,7 +20,7 @@ public class Record implements Serializable {
     private String    status;
     private Timestamp updatedAt;
     private Integer   categoryId;
-    private Short     statusType;
+    private RecordStatusType     statusType;
     private String    title;
 
     public Record() {}
@@ -43,7 +43,7 @@ public class Record implements Serializable {
         String    status,
         Timestamp updatedAt,
         Integer   categoryId,
-        Short     statusType,
+        RecordStatusType     statusType,
         String    title
     ) {
         this.id = id;
@@ -112,11 +112,11 @@ public class Record implements Serializable {
     }
 
     @Column(name = "status_type", nullable = false, precision = 16)
-    public Short getStatusType() {
+    public RecordStatusType getStatusType() {
         return this.statusType;
     }
 
-    public void setStatusType(Short statusType) {
+    public void setStatusType(RecordStatusType statusType) {
         this.statusType = statusType;
     }
 

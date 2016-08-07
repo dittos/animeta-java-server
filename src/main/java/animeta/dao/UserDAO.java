@@ -4,13 +4,14 @@ import animeta.model.QUser;
 import animeta.model.User;
 
 public class UserDAO extends AbstractDAO<User> {
-    public User find(int id) {
-        return get(id);
+    public User get(int id) {
+        return getInternal(id);
     }
 
-    public User find(String username) {
-        return queryFactory().selectFrom(QUser.user)
-                .where(QUser.user.username.eq(username))
+    public User get(String username) {
+        QUser user = QUser.user;
+        return queryFactory().selectFrom(user)
+                .where(user.username.eq(username))
                 .fetchOne();
     }
 }
